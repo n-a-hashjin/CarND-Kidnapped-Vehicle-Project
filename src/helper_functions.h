@@ -59,6 +59,28 @@ inline double dist(double x1, double y1, double x2, double y2) {
 }
 
 /**
+ * Returns the landmarks of global map that are in range of sensor
+ * @param x Sensor global x position (particle position)
+ * @param y Sensor global y position (particle position)
+ * @param sensor_range Range[m] of sensor
+ * @param map Map class containing map landmarks
+ * @param in_range vector of land marks which are located in range of sensor
+ */
+inline void inSensorRange(double x, double y, double sensor_range, 
+                                              const Map &map_landmarks,
+                                              std::vector<LandmarkObs> &in_range) {
+
+  auto landmarks = map_landmarks.landmark_list;
+  
+  for (size_t i=0; i<landmarks.size(); ++i) {
+    
+    if (dist(x, y, landmarks[i].x_f, landmarks[i].y_f) <= sensor_range)
+    in_range.emplace_back(LandmarkObs{landmarks[i].id_i, landmarks[i].x_f, landmarks[i].y_f});
+    
+  }
+}
+
+/**
  * Computes the error between ground truth and particle filter data.
  * @param (gt_x, gt_y, gt_theta) x, y and theta of ground truth
  * @param (pf_x, pf_y, pf_theta) x, y and theta of particle filter
